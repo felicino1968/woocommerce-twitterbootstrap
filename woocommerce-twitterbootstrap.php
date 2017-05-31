@@ -405,7 +405,7 @@ switch($woocommerce_loop['columns'])
 	
 	case 6: $classes = 'col-xs-6 col-sm-3 col-md-2'; break;
 	case 4: $classes = 'col-xs-12 col-sm-6 col-md-3'; break;
-	case 3: $classes = 'col-xs-12 col-sm-12 col-md-4'; break;
+	case 3: $classes = 'col-xs-12 col-sm-4 col-md-4'; break;
 	case 31: $classes = 'col-xs-12 col-sm-6 col-md-4'; break;
 	case 2: $classes = 'col-xs-12 col-sm-6 col-md-6'; break;
 	default: $classes = 'col-xs-12 col-sm-12 col-md-12';
@@ -643,3 +643,83 @@ if(class_exists('WooCommerce_Twitter_Bootstrap'))
 	
 	new WooCommerce_Twitter_Bootstrap();
 }
+
+
+
+
+
+
+
+
+
+
+
+if(!class_exists('Woo_Single_Variations_On_Archives')) 
+{ 
+
+class Woo_Single_Variations_On_Archives {
+
+	/*--------------------------------------------*
+	 * Constants
+	 *--------------------------------------------*/
+	const name = 'Woo Single Variations on Archives';
+	const slug = 'woo_single_variations_on_archives';
+	
+	//Constructor
+	function __construct() {
+		//register an activation hook for the plugin
+		register_activation_hook( __FILE__, array( &$this, 'install_woo_single_variations_on_archives' ) );
+
+		//Hook up to the init action
+		add_action( 'init', array( &$this, 'init_woo_single_variations_on_archives' ) );
+	}
+  
+	//Runs when the plugin is activated  
+	function install_woo_single_variations_on_archives() {
+		// do not generate any output here
+	}
+  
+	//Runs when the plugin is initialized
+	function init_woo_single_variations_on_archives() {
+		// Setup localization
+		load_plugin_textdomain( self::slug, false, dirname( plugin_basename( __FILE__ ) ) . '/lang' );
+	
+		if ( is_admin() ) {
+			//this will run when in the WordPress admin
+		} else {
+			//this will run when on the frontend
+		}
+		
+		//Template Part
+		//add_filter( 'wc_get_template_part', array($this, 'include_template_part' ), 10, 3 );
+	}
+	
+	// get path for templates used in loop ( like content-product.php )
+	function include_template_part( $template, $slug, $name ) { 
+		// Look in plugin/woocommerce/slug-name.php or plugin/woocommerce/slug.php
+		if ( $name ) {
+			$path = plugin_dir_path( __FILE__ ) . WC()->template_path() . "{$slug}-{$name}.php";    
+		} else {
+			$path = plugin_dir_path( __FILE__ ) . WC()->template_path() . "{$slug}.php";    
+		}
+		return file_exists( $path ) ? $path : $template;
+	}
+  
+} // end class
+
+
+
+
+}
+
+
+new Woo_Single_Variations_On_Archives();
+
+
+//Require file to add extra option to variation products
+require("extra-variation-options.php");
+
+
+
+
+
